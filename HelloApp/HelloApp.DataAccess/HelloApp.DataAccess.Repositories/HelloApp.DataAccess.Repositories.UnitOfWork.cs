@@ -1,10 +1,12 @@
-﻿public class UnitOfWork : IUnitOfWork
-{
-    private readonly AppDbContext _context;
-    private IRepository<User>? _userRepository;  // Сделать nullable
-    // Если необходимо: private IRepository<Order>? _orderRepository;
+﻿using HelloApp.Models;
 
-    public UnitOfWork(AppDbContext context)
+public class UnitOfWork : IUnitOfWork
+{
+    private readonly DbAppContext _context;
+    private IRepository<User>? _userRepository;  // Сделать nullable
+    //private IRepository<Order>? _orderRepository;
+
+    public UnitOfWork(DbAppContext context)
     {
         _context = context;
     }

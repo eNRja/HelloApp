@@ -1,4 +1,6 @@
-﻿public interface IUnitOfWork : IDisposable
+﻿using HelloApp.Models;
+
+public interface IUnitOfWork : IDisposable
 {
     IRepository<User> UserRepository { get; }
     //IRepository<Order> OrderRepository { get; }
