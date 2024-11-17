@@ -3,8 +3,8 @@
 public class UnitOfWork : IUnitOfWork
 {
     private readonly DbAppContext _context;
-    private IRepository<User>? _userRepository;  // Сделать nullable
-    //private IRepository<Order>? _orderRepository;
+    private IRepository<User>? _userRepository;
+    private IRepository<Device>? _deviceRepository;
 
     public UnitOfWork(DbAppContext context)
     {
@@ -16,10 +16,10 @@ public class UnitOfWork : IUnitOfWork
         get { return _userRepository ??= new Repository<User>(_context); }
     }
 
-    // public IRepository<Order> OrderRepository
-    // {
-    //     get { return _orderRepository ??= new Repository<Order>(_context); }
-    // }
+    public IRepository<Device> DeviceRepository
+    {
+        get { return _deviceRepository ??= new Repository<Device>(_context); }
+    }
 
     public void Commit()
     {

@@ -4,55 +4,138 @@
     <meta charset="utf-8" />
     <title>eNR</title>
     <style>
-        td {
-            padding: 5px;
+        /* Общие стили для страницы */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Контейнер для формы и таблицы */
+        .container {
+            width: 80%;
+            max-width: 1000px;
+            margin: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
         }
 
         button {
             margin: 5px;
         }
+
+        input, select {
+            width: 100%;
+            padding: 5px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            margin-bottom: 20px;
+        }
+
+        #errorMessage {
+            color: red;
+            display: none;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <h2>Список пользователей</h2>
-    <div>
-        <input type="hidden" id="userId" />
-        <p>
-            Имя:<br />
-            <input id="userName" />
-        </p>
-        <p>
-            Возраст:<br />
-            <input id="userAge" type="number" />
-        </p>
-        <p>
-            <button id="saveBtn">Сохранить</button>
-            <button id="resetBtn">Сбросить</button>
-        </p>
+    <div class="container">
+        <h2>Список пользователей</h2>
+
+        <!-- Сообщение об ошибке -->
+        <p id="errorMessage"></p>
+
+        <div class="form-container">
+            <input type="hidden" id="userId" />
+            <p>
+                Имя:<br />
+                <input id="userName" />
+            </p>
+            <p>
+                Возраст:<br />
+                <input id="userAge" type="number" />
+            </p>
+            <p>
+                Email:<br />
+                <input id="userEmail" />
+            </p>
+            <p>
+                Устройство:<br />
+                <select id="deviceSelect">
+                    <option value="">Нет устройства</option>
+                </select>
+            </p>
+            <p>
+                <button id="saveBtn">Сохранить</button>
+                <button id="resetBtn">Сбросить</button>
+            </p>
+        </div>
+
+        <table>
+            <thead><tr><th>Имя</th><th>Возраст</th><th>Email</th><th>Устройство</th><th></th></tr></thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
-    <table>
-        <thead><tr><th>Имя</th><th>Возраст</th><th></th></tr></thead>
-        <tbody>
-        </tbody>
-    </table>
 
     <script>
         // Получение всех пользователей
         async function getUsers() {
-            // отправляет запрос и получаем ответ
             const response = await fetch("/api/users", {
                 method: "GET",
                 headers: { "Accept": "application/json" }
             });
-            // если запрос прошел нормально
             if (response.ok === true) {
-                // получаем данные
                 const users = await response.json();
                 const rows = document.querySelector("tbody");
-                // добавляем полученные элементы в таблицу
                 users.forEach(user => rows.append(row(user)));
             }
         }
+
+        // Получение всех устройств
+        async function getDevices() {
+            const response = await fetch("/api/devices", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const devices = await response.json();
+                const deviceSelect = document.getElementById("deviceSelect");
+                devices.forEach(device => {
+                    const option = document.createElement("option");
+                    option.value = device.id;
+                    option.textContent = `${device.name} (${device.os})`;
+                    deviceSelect.append(option);
+                });
+            }
+        }
+
         // Получение одного пользователя
         async function getUser(id) {
             const response = await fetch(`/api/users/${id}`, {
@@ -64,78 +147,82 @@
                 document.getElementById("userId").value = user.id;
                 document.getElementById("userName").value = user.name;
                 document.getElementById("userAge").value = user.age;
-            }
-            else {
-                // если произошла ошибка, получаем сообщение об ошибке
+                document.getElementById("userEmail").value = user.email;
+                const deviceSelect = document.getElementById("deviceSelect");
+                if (user.device) {
+                    deviceSelect.value = user.device.id;
+                } else {
+                    deviceSelect.value = "";
+                }
+            } else {
                 const error = await response.json();
-                console.log(error.message); // и выводим его на консоль
+                showError(error.message);
             }
         }
-        // Добавление пользователя
-        async function createUser(userName, userAge) {
 
+        // Добавление пользователя
+        async function createUser(userName, userAge, userEmail, deviceId) {
             const response = await fetch("api/users", {
                 method: "POST",
                 headers: { "Accept": "application/json", "Content-Type": "application/json" },
                 body: JSON.stringify({
                     name: userName,
-                    age: parseInt(userAge, 10)
+                    age: parseInt(userAge, 10),
+                    email: userEmail,
+                    deviceId: deviceId || null
                 })
             });
             if (response.ok === true) {
                 const user = await response.json();
                 document.querySelector("tbody").append(row(user));
-            }
-            else {
+                hideError();
+            } else {
                 const error = await response.json();
-                console.log(error.message);
+                showError(error.message)
             }
         }
+
+        // Удаление пользователя
+        async function deleteUser(userId) {
+            const response = await fetch(`/api/users/${userId}`, {
+                method: "DELETE",
+                headers: { "Accept": "application/json" }
+            });
+
+            if (response.ok === true) {
+                const rowToDelete = document.querySelector(`tr[data-rowid='${userId}']`);
+                rowToDelete.remove();
+            } else {
+                const error = await response.json();
+                showError(error.message);
+            }
+        }
+
         // Изменение пользователя
-        async function editUser(userId, userName, userAge) {
+        async function editUser(userId, userName, userAge, userEmail, deviceId) {
             const response = await fetch("api/users", {
                 method: "PUT",
                 headers: { "Accept": "application/json", "Content-Type": "application/json" },
                 body: JSON.stringify({
                     id: userId,
                     name: userName,
-                    age: parseInt(userAge, 10)
+                    age: parseInt(userAge, 10),
+                    email: userEmail,
+                    deviceId: deviceId || null
                 })
             });
             if (response.ok === true) {
                 const user = await response.json();
                 document.querySelector(`tr[data-rowid='${user.id}']`).replaceWith(row(user));
-            }
-            else {
+                hideError();
+            } else {
                 const error = await response.json();
-                console.log(error.message);
-            }
-        }
-        // Удаление пользователя
-        async function deleteUser(id) {
-            const response = await fetch(`/api/users/${id}`, {
-                method: "DELETE",
-                headers: { "Accept": "application/json" }
-            });
-            if (response.ok === true) {
-                const user = await response.json();
-                document.querySelector(`tr[data-rowid='${user.id}']`).remove();
-            }
-            else {
-                const error = await response.json();
-                console.log(error.message);
+                showError(error.message);
             }
         }
 
-        // сброс данных формы после отправки
-        function reset() {
-            document.getElementById("userId").value =
-                document.getElementById("userName").value =
-                document.getElementById("userAge").value = "";
-        }
         // создание строки для таблицы
         function row(user) {
-
             const tr = document.createElement("tr");
             tr.setAttribute("data-rowid", user.id);
 
@@ -146,6 +233,14 @@
             const ageTd = document.createElement("td");
             ageTd.append(user.age);
             tr.append(ageTd);
+
+            const emailTd = document.createElement("td");
+            emailTd.append(user.email);
+            tr.append(emailTd);
+
+            const deviceTd = document.createElement("td");
+            deviceTd.append(user.device && user.device.name || "Нет устройства");
+            tr.append(deviceTd);
 
             const linksTd = document.createElement("td");
 
@@ -163,24 +258,80 @@
 
             return tr;
         }
-        // сброс значений формы
-        document.getElementById("resetBtn").addEventListener("click", () => reset());
 
-        // отправка формы
-        document.getElementById("saveBtn").addEventListener("click", async () => {
+        // Функция для отображения ошибки
+        function showError(message) {
+            const errorMessageElement = document.getElementById("errorMessage");
+            errorMessageElement.textContent = message;
+            errorMessageElement.style.display = "block";
+        }
 
-            const id = document.getElementById("userId").value;
-            const name = document.getElementById("userName").value;
-            const age = document.getElementById("userAge").value;
-            if (id === "")
-                await createUser(name, age);
-            else
-                await editUser(id, name, age);
-            reset();
-        });
+        // Функция для скрытия ошибки
+        function hideError() {
+            const errorMessageElement = document.getElementById("errorMessage");
+            errorMessageElement.style.display = "none";
+            errorMessageElement.textContent = "";
+        }
 
-        // загрузка пользователей
-        getUsers();
+        // Функция для валидации полей формы
+        function validateForm(name, age, email) {
+            const nameRegex = /^[А-ЯЁA-Z][а-яёa-z]*$/;
+            if (!name || !nameRegex.test(name)) {
+                showError("Имя должно начинаться с заглавной буквы и содержать только буквы.");
+                return false;
+            }
+
+            if (age < 0 || age > 100 || !age) {
+                showError("Возраст должен быть от 0 до 100.");
+                return false;
+            }
+
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!email || !emailRegex.test(email)) {
+                showError("Введите корректный email.");
+                return false;
+            }
+
+            hideError();
+            return true;
+        }
+
+        // Сохранение или редактирование данных
+        async function validateAndSave() {
+            const name = document.getElementById("userName").value.trim();
+            const age = document.getElementById("userAge").value.trim();
+            const email = document.getElementById("userEmail").value.trim();
+            const deviceId = document.getElementById("deviceSelect").value;
+            const userId = document.getElementById("userId").value;
+
+            if (validateForm(name, age, email)) {
+                if (userId === "") {
+                    await createUser(name, age, email, deviceId);
+                } else {
+                    await editUser(userId, name, age, email, deviceId);
+                }
+                reset();
+            }
+        }
+
+        // Сброс формы
+        function reset() {
+            document.getElementById("userId").value = "";
+            document.getElementById("userName").value = "";
+            document.getElementById("userAge").value = "";
+            document.getElementById("userEmail").value = "";
+            document.getElementById("deviceSelect").value = "";
+        }
+
+        // Инициализация
+        window.onload = () => {
+            getUsers();
+            getDevices();
+        };
+
+        // Обработчики событий
+        document.getElementById("saveBtn").addEventListener("click", validateAndSave);
+        document.getElementById("resetBtn").addEventListener("click", reset);
     </script>
 </body>
 </html>

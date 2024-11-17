@@ -1,52 +1,89 @@
 ﻿using HelloApp.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
+using HelloApp.Services;
 
 public static class UserController
 {
     public static void MapUserRoutes(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/users", async (IUnitOfWork unitOfWork) =>
+        // Использование UserService вместо прямого обращения к репозиторию
+        endpoints.MapGet("/api/users", async (UserService userService, DeviceService deviceService) =>
         {
-            var users = await unitOfWork.UserRepository.GetAllAsync();
+            var users = await userService.GetAllUsersAsync();
+
+            foreach (var user in users)
+            {
+                if (user.DeviceId.HasValue)
+                {
+                    user.Device = await deviceService.GetDeviceByIdAsync(user.DeviceId.Value);
+                }
+            }
+
             return Results.Json(users);
         });
 
-        endpoints.MapGet("/api/users/{id:int}", async (int id, IUnitOfWork unitOfWork) =>
+        endpoints.MapGet("/api/users/{id:int}", async (int id, UserService userService, DeviceService deviceService) =>
         {
-            var user = await unitOfWork.UserRepository.GetByIdAsync(id);
+            var user = await userService.GetUserByIdAsync(id);
+
+            if (user is null)
+                return Results.NotFound(new { message = "Пользователь не найден" });
+
+            // Populate the Device property using deviceService
+            if (user.DeviceId.HasValue)
+            {
+                user.Device = await deviceService.GetDeviceByIdAsync(user.DeviceId.Value);
+            }
+
             return user is null ? Results.NotFound(new { message = "Пользователь не найден" }) : Results.Json(user);
         });
 
-        endpoints.MapDelete("/api/users/{id:int}", async (int id, IUnitOfWork unitOfWork) =>
+        endpoints.MapDelete("/api/users/{id:int}", async (int id, UserService userService) =>
         {
-            var user = await unitOfWork.UserRepository.GetByIdAsync(id);
+            var user = await userService.GetUserByIdAsync(id);
             if (user is null) return Results.NotFound(new { message = "Пользователь не найден" });
 
-            unitOfWork.UserRepository.Remove(user);
-            await unitOfWork.SaveChangesAsync();
+            userService.RemoveUser(user);
+            await userService.SaveChangesAsync();
 
             return Results.Json(user);
         });
 
-        endpoints.MapPost("/api/users", async (User user, IUnitOfWork unitOfWork) =>
+        endpoints.MapPost("/api/users", async (User user, UserService userService) =>
         {
-            await unitOfWork.UserRepository.AddAsync(user);
-            await unitOfWork.SaveChangesAsync();
-            return Results.Json(user);
+            try
+            {
+                await userService.AddUserAsync(user);
+                await userService.SaveChangesAsync();
+                return Results.Json(user);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Возвращаем ошибку, если пользователь с таким email уже существует
+                return Results.BadRequest(new { message = ex.Message });
+            }
         });
 
-        endpoints.MapPut("/api/users", async (User userData, IUnitOfWork unitOfWork) =>
+        endpoints.MapPut("/api/users", async (User userData, UserService userService, DeviceService deviceService) =>
         {
-            var user = await unitOfWork.UserRepository.GetByIdAsync(userData.Id);
+            var user = await userService.GetUserByIdAsync(userData.Id);
             if (user is null) return Results.NotFound(new { message = "Пользователь не найден" });
 
             user.Name = userData.Name;
             user.Age = userData.Age;
-            unitOfWork.UserRepository.Update(user);
-            await unitOfWork.SaveChangesAsync();
+            user.Email = userData.Email;
+            user.DeviceId = userData.DeviceId;
+
+            if (user.DeviceId.HasValue)
+            {
+                var device = await deviceService.GetDeviceByIdAsync(user.DeviceId.Value);
+                if (device != null)
+                {
+                    user.Device = device;  // Присваиваем актуальное устройство в свойство Device
+                }
+            }
+
+            await userService.UpdateUserAsync(user);
+            await userService.SaveChangesAsync();
 
             return Results.Json(user);
         });

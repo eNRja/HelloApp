@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 public class Repository<T> : IRepository<T> where T : class
 {
@@ -20,4 +21,9 @@ public class Repository<T> : IRepository<T> where T : class
     public void Remove(T entity) => _dbSet.Remove(entity);
 
     public void Update(T entity) => _dbSet.Update(entity);
+
+    public async Task<T?> FindAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.FirstOrDefaultAsync(predicate);
+    }
 }
