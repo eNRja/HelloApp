@@ -1,5 +1,4 @@
-﻿using HelloApp.Models;
-using HelloApp.Services;
+﻿using HelloApp.DataAccess;
 
 public static class UserController
 {

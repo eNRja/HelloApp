@@ -1,4 +1,4 @@
-﻿using HelloApp.Models;
+﻿using HelloApp.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

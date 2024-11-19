@@ -1,4 +1,4 @@
-﻿using HelloApp.Models;
+﻿using HelloApp.DataAccess;
 using System.Data;
 
 public interface IUnitOfWork : IDisposable

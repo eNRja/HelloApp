@@ -1,7 +1,4 @@
-﻿using HelloApp.Models;
-using HelloApp.Data.Repositories;
-
-namespace HelloApp.Services
+﻿namespace HelloApp.DataAccess
 {
     public class DeviceService
     {

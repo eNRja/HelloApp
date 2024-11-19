@@ -17,7 +17,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\HelloApp.Models\HelloApp.Models.csproj" />
 		<ProjectReference Include="..\HelloApp.Services\HelloApp.Services.csproj" />
 	</ItemGroup>
 

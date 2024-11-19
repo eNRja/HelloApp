@@ -1,6 +1,4 @@
-﻿using HelloApp.Data;
-using HelloApp.Data.Repositories;
-using HelloApp.Services;
+﻿using HelloApp.DataAccess;
 using Microsoft.EntityFrameworkCore;
 public static class ApplicationServiceExtensions
 {

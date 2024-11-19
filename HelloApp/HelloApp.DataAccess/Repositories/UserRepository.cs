@@ -1,8 +1,7 @@
-﻿using HelloApp.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace HelloApp.Data.Repositories
+namespace HelloApp.DataAccess.Repositories
 {
     public class UserRepository : IRepository<User>
     {

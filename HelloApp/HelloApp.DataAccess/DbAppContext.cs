@@ -1,10 +1,11 @@
-﻿using HelloApp.Models;
+﻿using HelloApp.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
 public class DbAppContext : DbContext
 {
-    public DbSet<User> Users { get; set; } = null!;
-    public DbSet<Device> Devices { get; set; } = null!;
+    public DbSet<HelloApp.DataAccess.User> Users { get; set; }
+    public DbSet<HelloApp.DataAccess.Device> Devices { get; set; }
+
 
     public DbAppContext(DbContextOptions<DbAppContext> options)
         : base(options)

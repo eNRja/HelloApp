@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloApp", "HelloApp\HelloA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloApp.DataAccess", "HelloApp\HelloApp.DataAccess\HelloApp.DataAccess.csproj", "{411A6333-3EF8-4E0F-B803-8BC46B429813}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloApp.Models", "HelloApp\HelloApp.Models\HelloApp.Models.csproj", "{9F5EF05D-FEB0-40A8-87E9-56ED88225C1C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloApp.Web", "HelloApp\HelloApp.Web\HelloApp.Web.csproj", "{400778B9-C9B5-48EC-B38A-C88BDC1A9E17}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BD2806E-C413-484D-AA96-3875FDE6FB75}"
@@ -32,10 +30,6 @@ Global
 		{411A6333-3EF8-4E0F-B803-8BC46B429813}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{411A6333-3EF8-4E0F-B803-8BC46B429813}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{411A6333-3EF8-4E0F-B803-8BC46B429813}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F5EF05D-FEB0-40A8-87E9-56ED88225C1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F5EF05D-FEB0-40A8-87E9-56ED88225C1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F5EF05D-FEB0-40A8-87E9-56ED88225C1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F5EF05D-FEB0-40A8-87E9-56ED88225C1C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{400778B9-C9B5-48EC-B38A-C88BDC1A9E17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{400778B9-C9B5-48EC-B38A-C88BDC1A9E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{400778B9-C9B5-48EC-B38A-C88BDC1A9E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
