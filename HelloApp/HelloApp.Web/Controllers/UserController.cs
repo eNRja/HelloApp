@@ -4,7 +4,6 @@ public static class UserController
 {
     public static void MapUserRoutes(this IEndpointRouteBuilder endpoints)
     {
-        // Использование UserService вместо прямого обращения к репозиторию
         endpoints.MapGet("/api/users", async (UserService userService, DeviceService deviceService) =>
         {
             var users = await userService.GetAllUsersAsync();

@@ -14,7 +14,11 @@ public static class ApplicationServiceExtensions
         // Регистрация сервисов
         builder.Services.AddScoped<UserService>();
         builder.Services.AddScoped<DeviceService>();
+        // TODO: узнать почему нельзя удалить строку ниже, не понимаю в чем разница <WeatherService> && <IWeatherService, WeatherService>
         builder.Services.AddScoped<WeatherService>();
+        builder.Services.AddScoped<IExternalApiService, ExternalApiService>();
+        builder.Services.AddScoped<IWeatherService, WeatherService>();
+
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Configuration.AddJsonFile("appsettings.Secrets.json", optional: true, reloadOnChange: true);
 
