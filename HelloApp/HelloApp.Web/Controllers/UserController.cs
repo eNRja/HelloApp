@@ -1,4 +1,4 @@
-﻿using HelloApp.DataAccess;
+﻿using HelloApp.Services;
 
 public static class UserController
 {
@@ -40,7 +40,7 @@ public static class UserController
             var user = await userService.GetUserByIdAsync(id);
             if (user is null) return Results.NotFound(new { message = "Пользователь не найден" });
 
-            userService.RemoveUser(user);
+            await userService.RemoveUserAsync(user);
             await userService.SaveChangesAsync();
 
             return Results.Json(user);

@@ -1,40 +1,67 @@
-﻿using HelloApp.DataAccess;
+﻿using AutoMapper;
 
-public class UserService
+namespace HelloApp.Services
 {
-    private readonly IRepository<User> _userRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public UserService(IRepository<User> userRepository, IUnitOfWork unitOfWork)
+    public class UserService
     {
-        _userRepository = userRepository;
-        _unitOfWork = unitOfWork;
-    }
+        private readonly IRepository<DataAccess.User> _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-    public async Task<List<User>> GetAllUsersAsync() => await _userRepository.GetAllAsync();
-
-    public async Task<User?> GetUserByIdAsync(int id) => await _userRepository.GetByIdAsync(id);
-
-    public async Task AddUserAsync(User user)
-    {
-        // Проверка, существует ли пользователь с таким email
-        var existingUser = await _userRepository.FindAsync(u => u.Email == user.Email);
-        if (existingUser != null)
+        public UserService(IRepository<DataAccess.User> userRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
-            throw new InvalidOperationException($"Пользователь с email {user.Email} уже существует.");
+            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        // Если пользователь с таким email не найден, добавляем нового
-        await _userRepository.AddAsync(user);
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            var users = await _userRepository.GetAllAsync();
+            return _mapper.Map<List<User>>(users);
+        }
+
+        public async Task<User?> GetUserByIdAsync(int id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            return user == null ? null : _mapper.Map<User>(user);
+        }
+
+        public async Task AddUserAsync(User user)
+        {
+            var existingUser = await _userRepository.FindAsync(u => u.Email == user.Email);
+            if (existingUser != null)
+            {
+                throw new InvalidOperationException($"Пользователь с email {user.Email} уже существует.");
+            }
+
+            var userEntity = _mapper.Map<DataAccess.User>(user);
+            await _userRepository.AddAsync(userEntity);
+        }
+
+        public async Task RemoveUserAsync(User user)
+        {
+            var userEntity = await _userRepository.GetByIdAsync(user.Id);
+            if (userEntity == null)
+            {
+                throw new InvalidOperationException("Пользователь не найден.");
+            }
+
+            _userRepository.Remove(userEntity);
+        }
+
+        public async Task UpdateUserAsync(User user)
+        {
+            var existingUser = await _userRepository.GetByIdAsync(user.Id);
+            if (existingUser == null)
+            {
+                throw new InvalidOperationException("Пользователь не найден.");
+            }
+
+            _mapper.Map(user, existingUser); // Обновляем данные из модели в сущности
+            _userRepository.Update(existingUser);
+        }
+
+        public async Task SaveChangesAsync() => await _unitOfWork.SaveChangesAsync();
     }
-
-    public void RemoveUser(User user) => _userRepository.Remove(user);
-
-    public Task UpdateUserAsync(User user)
-    {
-        _userRepository.Update(user);
-        return Task.CompletedTask;
-    }
-
-    public async Task SaveChangesAsync() => await _unitOfWork.SaveChangesAsync();
 }

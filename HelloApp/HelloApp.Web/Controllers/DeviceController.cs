@@ -1,4 +1,4 @@
-﻿using HelloApp.DataAccess;
+﻿using HelloApp.Services;
 
 public static class DeviceController
 {
