@@ -12,5 +12,6 @@ app.UseStaticFiles();
 // Настройка маршрутов
 app.MapUserRoutes();
 app.MapDeviceRoutes();
+app.MapWeatherRoutes();
 
 app.Run();

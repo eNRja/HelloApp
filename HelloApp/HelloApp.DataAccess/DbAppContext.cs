@@ -5,7 +5,7 @@ public class DbAppContext : DbContext
 {
     public DbSet<HelloApp.DataAccess.User> Users { get; set; }
     public DbSet<HelloApp.DataAccess.Device> Devices { get; set; }
-
+    public DbSet<HelloApp.DataAccess.Weather> Weathers { get; set; }
 
     public DbAppContext(DbContextOptions<DbAppContext> options)
         : base(options)
@@ -18,6 +18,7 @@ public class DbAppContext : DbContext
     {
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new DeviceConfiguration());
+        modelBuilder.ApplyConfiguration(new WeatherConfiguration());
     }
 
     public async Task BeginTransactionAsync()

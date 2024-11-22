@@ -102,6 +102,12 @@
             <tbody>
             </tbody>
         </table>
+
+        <div id="weatherInfo">
+            <h3>Погода</h3>
+            <p id="temperature"></p>
+        </div>
+
     </div>
 
     <script>
@@ -323,10 +329,48 @@
             document.getElementById("deviceSelect").value = "";
         }
 
+        const apiKey = "01362c128b934ef0b64103219242111"; // Вставьте сюда ваш ключ
+
+        // Функция для получения данных о погоде
+        //async function getWeather(city) {
+        //    try {
+        //        const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=no`, {
+        //            method: "GET",
+        //            headers: { "Accept": "application/json" }
+        //        });
+        //        console.log(response);
+        //        if (response.ok) {
+        //            const weather = await response.json();
+        //            document.getElementById("temperature").textContent = `Температура: ${weather.current.temp_c}°C`;
+        //            document.getElementById("condition").textContent = `Состояние: ${weather.current.condition.text}`;
+        //        } else {
+        //            console.error("Ошибка при запросе данных о погоде:", response.statusText);
+        //        }
+        //    } catch (error) {
+        //        console.error("Ошибка при выполнении запроса:", error);
+        //    }
+        //}
+
+        async function getWeather() {
+            const response = await fetch(`/api/weather`, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            console.log(response);
+            if (response.ok) {
+                const weather = await response.json();
+                document.getElementById("temperature").textContent = `Температура: ${weather.temperature}°C`; // Приводим к единому регистру
+            } else {
+                document.getElementById("temperature").textContent = `Ошибка получения температуры`;
+            }
+        }
+
+
         // Инициализация
         window.onload = () => {
             getUsers();
             getDevices();
+            getWeather("Moscow");
         };
 
         // Обработчики событий
