@@ -1,5 +1,4 @@
-﻿using HelloApp.DataAccess;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 public static class ApplicationServiceExtensions
 {
     public static void AddAppConfiguration(this WebApplicationBuilder builder)

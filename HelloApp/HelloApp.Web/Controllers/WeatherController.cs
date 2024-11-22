@@ -1,6 +1,4 @@
-﻿using HelloApp.DataAccess;
-
-public static class WeatherController
+﻿public static class WeatherController
 {
     public static void MapWeatherRoutes(this IEndpointRouteBuilder endpoints)
     {

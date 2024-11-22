@@ -4,15 +4,11 @@ using System.Text.Json;
 
 public class WeatherService : IWeatherService
 {
-    private readonly IRepository<Weather> _weatherRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IExternalApiService _externalApiClient;
     private readonly string ApiKey;
 
-    public WeatherService(IRepository<Weather> weatherRepository, IUnitOfWork unitOfWork, IExternalApiService externalApiClient, IConfiguration configuration)
+    public WeatherService(IExternalApiService externalApiClient, IConfiguration configuration)
     {
-        _weatherRepository = weatherRepository;
-        _unitOfWork = unitOfWork;
         _externalApiClient = externalApiClient;
         ApiKey = configuration["WeatherApi:ApiKey"]
              ?? throw new Exception("API Key не найден в конфигурации.");
@@ -41,5 +37,4 @@ public class WeatherService : IWeatherService
         };
     }
 
-    public async Task SaveChangesAsync() => await _unitOfWork.SaveChangesAsync();
-}
+ }

@@ -1,5 +1,4 @@
 ﻿using HelloApp.DataAccess;
-using System.Data;
 
 public interface IUnitOfWork : IDisposable
 {
