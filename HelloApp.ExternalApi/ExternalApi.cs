@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 public class ExternalApi : IExternalApi
 {
     private readonly RestClient _restClient;
-    private readonly string _baseUrl;
 
     public ExternalApi(RestClient restClient, IConfiguration configuration)
     {
@@ -42,6 +41,7 @@ public class ExternalApi : IExternalApi
         {
             throw new Exception($"Ошибка API: {response.StatusCode}");
         }
+
         if (string.IsNullOrWhiteSpace(response.Content))
         {
             throw new Exception("Ответ API пустой.");

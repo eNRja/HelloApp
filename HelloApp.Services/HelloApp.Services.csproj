@@ -12,7 +12,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\HelloApp.DataAccess\HelloApp.DataAccess.csproj" />
-		<ProjectReference Include="..\HelloApp.ExternalApi\HelloApp.ExternalApi.csproj" />
+		<ProjectReference Include="..\MeteoHandler\HelloApp.MeteoHandler.csproj" />
 	</ItemGroup>
 
 </Project>

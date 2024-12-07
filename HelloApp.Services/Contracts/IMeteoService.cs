@@ -1,4 +1,4 @@
-﻿using HelloApp.Services;
+﻿using HelloApp.MeteoHandler;
 
 public interface IMeteoService
 {

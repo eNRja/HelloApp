@@ -1,11 +1,9 @@
-﻿namespace HelloApp.Services
+﻿//namespace HelloApp.Services
 
-{
-    public class Weather
-    {
-        public int Id { get; set; }
-        public string City { get; set; } = "";
-        public double Temperature { get; set; }
-    }
-
-}
+//{
+//    public class ServiceWeather
+//    {
+//        public string City { get; set; } = "";
+//        public double Temperature { get; set; }
+//    }
+//}
