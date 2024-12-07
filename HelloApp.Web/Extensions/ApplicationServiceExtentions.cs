@@ -28,16 +28,10 @@ public static class ApplicationServiceExtensions
         });
 
         // Регистрация ExternalApi
-        builder.Services.AddScoped<IExternalApi>(provider =>
-        {
-            var configuration = provider.GetRequiredService<IConfiguration>();
-            var cache = provider.GetRequiredService<IMemoryCache>();
-            var baseUrl = configuration["ExternalApi:WeatherUrl"];
-            return new ExternalApi(baseUrl, cache);
-        });
+        builder.Services.AddScoped<IExternalApi, ExternalApi>();
 
         // Регистрация стратегий и фасада
-        builder.Services.AddScoped<IApiHandler, CurrentWeatherHandler>();
+        builder.Services.AddScoped<IMeteoHandler, MeteoHandler>();
         builder.Services.AddScoped<IMeteoService, MeteoService>();
 
         // Настройка AutoMapper

@@ -1,26 +1,27 @@
-﻿using HelloApp.Services;
+﻿using Azure.Core;
+using HelloApp.Services;
+using RestSharp;
 using System.Text.Json;
 
 public class MeteoService : IMeteoService
 {
-    private readonly IApiHandler _apiHandler;
+    private readonly IMeteoHandler _apiHandler;
 
-    public MeteoService(IApiHandler apiHandler)
+    public MeteoService(IMeteoHandler apiHandler)
     {
         _apiHandler = apiHandler;
     }
 
-    public async Task<Weather> GetDegreeseByDay(string location)
+    public async Task<Weather> GetDegreeseByDay(string location, string endpoint)
     {
-        var queryParams = new Dictionary<string, string>
+        var request = new Dictionary<string, string>
         {
             { "q", location }
         };
+        
+        var response = await _apiHandler.MeteoRequest(endpoint, Method.Get, request);
 
-        var response = await _apiHandler.FetchDataAsync(queryParams);
-
-        using var jsonDoc = JsonDocument.Parse(response);
-        var root = jsonDoc.RootElement;
+        var root = response.RootElement;
 
         var city = root.GetProperty("location").GetProperty("name").GetString();
         var temperature = root.GetProperty("current").GetProperty("temp_c").GetDouble();

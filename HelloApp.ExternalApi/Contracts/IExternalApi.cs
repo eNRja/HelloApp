@@ -1,4 +1,7 @@
-﻿public interface IExternalApi
+﻿using RestSharp;
+using System.Text.Json;
+
+public interface IExternalApi
 {
-    Task<string> GetDataAsync(string baseUrl, string endpoint, Dictionary<string, string> queryParams);
+    Task<JsonDocument> DataRequest(string endpoint, Method method, Dictionary<string, string> request);
 }

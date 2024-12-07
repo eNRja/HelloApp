@@ -1,15 +1,17 @@
 ﻿using Microsoft.Extensions.Configuration;
+using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
-public class CurrentWeatherHandler : IApiHandler
+public class MeteoHandler : IMeteoHandler
 {
     private readonly IExternalApi _externalApi;
     private readonly string _baseUrl;
     private readonly string _apiKey;
 
-    public CurrentWeatherHandler(IExternalApi externalApi, IConfiguration configuration)
+    public MeteoHandler(IExternalApi externalApi, IConfiguration configuration)
     {
         _externalApi = externalApi;
 
@@ -20,10 +22,11 @@ public class CurrentWeatherHandler : IApiHandler
                   ?? throw new Exception("API Key для WeatherApi не найден в конфигурации.");
     }
 
-    public async Task<string> FetchDataAsync(Dictionary<string, string> queryParams)
+    public async Task<JsonDocument> MeteoRequest(string endpoint, Method method, Dictionary<string, string> request)
     {
-        queryParams["key"] = _apiKey;
+        string fullEndpoint = _baseUrl + endpoint;
+        request["key"] = _apiKey;
 
-        return await _externalApi.GetDataAsync(_baseUrl, "/current.json", queryParams);
+        return await _externalApi.DataRequest(fullEndpoint, method, request );
     }
 }

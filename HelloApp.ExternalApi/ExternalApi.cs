@@ -1,59 +1,52 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Configuration;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 public class ExternalApi : IExternalApi
 {
     private readonly RestClient _restClient;
-    private readonly IMemoryCache _cache;
-    private readonly TimeSpan _cacheDuration = TimeSpan.FromMinutes(10);
+    private readonly string _baseUrl;
 
-    public ExternalApi(string baseUrl, IMemoryCache cache)
+    public ExternalApi(RestClient restClient, IConfiguration configuration)
     {
-        _restClient = new RestClient(baseUrl);
-        _cache = cache;
+        _restClient = restClient;
     }
 
-    public async Task<string> GetDataAsync(string baseUrl, string endpoint, Dictionary<string, string> queryParams)
+    public async Task<JsonDocument> DataRequest(string endpoint, Method method, Dictionary<string, string> request)
     {
-        // Генерируем ключ для кэша
-        var cacheKey = GenerateCacheKey(endpoint, queryParams);
+        var newRequest = new RestRequest(endpoint, method);
 
-        // Проверяем кэш
-        if (_cache.TryGetValue(cacheKey, out string cachedContent))
+        switch (method)
         {
-            return cachedContent;
+            case Method.Get:
+                foreach (var param in request)
+                {
+                    newRequest.AddParameter(param.Key, param.Value, ParameterType.QueryString);
+                }
+                break;
+
+            case Method.Delete:
+                // DELETE метод
+                break;
+
+            default:
+                throw new NotImplementedException($"Метод {method} не поддерживается.");
         }
 
-        // Формируем запрос
-        var request = new RestRequest(endpoint, Method.Get);
+        var response = await _restClient.ExecuteAsync(newRequest);
 
-        // Добавляем параметры запроса
-        foreach (var param in queryParams)
-        {
-            request.AddParameter(param.Key, param.Value, ParameterType.QueryString);
-        }
-
-        var response = await _restClient.ExecuteAsync(request);
         if (!response.IsSuccessful)
         {
             throw new Exception($"Ошибка API: {response.StatusCode}");
         }
+        if (string.IsNullOrWhiteSpace(response.Content))
+        {
+            throw new Exception("Ответ API пустой.");
+        }
 
-        var content = response.Content;
-
-        // Кэшируем результат
-        _cache.Set(cacheKey, content, _cacheDuration);
-
-        return content;
-    }
-
-    private string GenerateCacheKey(string endpoint, Dictionary<string, string> queryParams)
-    {
-        var queryString = string.Join("&", queryParams.Select(p => $"{p.Key}={p.Value}"));
-        return $"{endpoint}?{queryString}";
+        return JsonDocument.Parse(response.Content);
     }
 }
