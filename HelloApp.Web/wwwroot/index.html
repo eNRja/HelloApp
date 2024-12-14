@@ -344,7 +344,6 @@
             console.log(response);
             if (response.ok) {
                 const weather = await response.json();
-                console.log("GGGGGGGGGGG", weather);
                 document.getElementById("temperature").textContent = `${weather.city}: ${Math.round(weather.temperature)}°C`;
             } else {
                 document.getElementById("temperature").textContent = `Ошибка получения температуры`;
