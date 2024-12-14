@@ -35,11 +35,11 @@ public class MeteoHandler : IMeteoHandler
 
         var responseMeteo = await _externalApi.DataRequest(fullEndpoint, method, request);
         var serializedMeteo = JsonSerializer.Deserialize<WeatherResponse>(responseMeteo.RootElement.GetRawText(), options);
-
-        return new Weather
+        var result = new Weather
         {
-            City = serializedMeteo?.Location?.Name,
-            Temperature = serializedMeteo?.Current?.Temp_C ?? 0
+            WeatherModel = serializedMeteo
         };
+
+        return result;
     }
 }

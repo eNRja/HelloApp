@@ -1,12 +1,12 @@
 ﻿namespace HelloApp.MeteoHandler
-
 {
     public class Weather
     {
-        public string City { get; set; } = "";
-        public double Temperature { get; set; }
-    }
+        public WeatherResponse WeatherModel { get; set; }
 
+        public string City => WeatherModel?.Location?.Name ?? string.Empty;
+        public double Temperature => WeatherModel?.Current?.Temp_C ?? 0.0;
+    }
 
     public class WeatherResponse
     {
