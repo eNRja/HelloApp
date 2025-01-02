@@ -34,7 +34,7 @@ public class MeteoHandler : IMeteoHandler
 
         options.PropertyNameCaseInsensitive = true; // JSON поля могут быть с разным регистром
         apiRequest.Add("key", _apiKey);
-        apiRequest.Add("q", request.Name);
+        apiRequest.Add("q", request.Location);
 
         var responseMeteo = await _externalApi.DataRequest(fullEndpoint, Method.Get, apiRequest);
         var serializedMeteo = JsonSerializer.Deserialize<Weather>(responseMeteo.RootElement.GetRawText(), options);

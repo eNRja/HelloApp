@@ -15,7 +15,7 @@ public class MeteoService : IMeteoService
     public async Task<WeatherResponse> GetDegreeseByDay(string location)
     {
         var request = new LocationRequest();
-        request.Name = location;
+        request.Location = location;
 
         return await _apiHandler.GetWeather(request);
     }
