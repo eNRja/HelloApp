@@ -1,4 +1,6 @@
 ﻿using HelloApp.MeteoHandler;
+using HelloApp.MeteoHandler.Entities.Messages.Requests;
+using HelloApp.MeteoHandler.Entities.Messages.Responses;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
 using System;
@@ -23,21 +25,22 @@ public class MeteoHandler : IMeteoHandler
                   ?? throw new Exception("API Key для WeatherApi не найден в конфигурации.");
     }
 
-    public async Task<Weather> MeteoRequest(string endpoint, Method method, Dictionary<string, string> request)
+    public async Task<WeatherResponse> GetWeather(LocationRequest request)
     {
-        string fullEndpoint = _baseUrl + endpoint;
-        request["key"] = _apiKey;
+        const string endpoint = "/current.json";
+        var fullEndpoint = _baseUrl + endpoint;
+        var options = new JsonSerializerOptions();
+        var apiRequest = new Dictionary<string, string>();
 
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true // JSON поля могут быть с разным регистром
-        };
+        options.PropertyNameCaseInsensitive = true; // JSON поля могут быть с разным регистром
+        apiRequest.Add("key", _apiKey);
+        apiRequest.Add("q", request.Name);
 
-        var responseMeteo = await _externalApi.DataRequest(fullEndpoint, method, request);
-        var serializedMeteo = JsonSerializer.Deserialize<WeatherResponse>(responseMeteo.RootElement.GetRawText(), options);
-        var result = new Weather
+        var responseMeteo = await _externalApi.DataRequest(fullEndpoint, Method.Get, apiRequest);
+        var serializedMeteo = JsonSerializer.Deserialize<Weather>(responseMeteo.RootElement.GetRawText(), options);
+        var result = new WeatherResponse()
         {
-            WeatherModel = serializedMeteo
+            Weather = serializedMeteo
         };
 
         return result;

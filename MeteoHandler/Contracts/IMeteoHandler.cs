@@ -1,8 +1,8 @@
-﻿using HelloApp.MeteoHandler;
+﻿using HelloApp.MeteoHandler.Entities.Messages.Requests;
+using HelloApp.MeteoHandler.Entities.Messages.Responses;
 using RestSharp;
-using System.Text.Json;
 
 public interface IMeteoHandler
 {
-    Task<Weather> MeteoRequest(string endpoint, Method method, Dictionary<string, string> request);
+    Task<WeatherResponse> GetWeather(LocationRequest request);
 }

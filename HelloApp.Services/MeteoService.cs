@@ -1,5 +1,5 @@
-﻿using Azure.Core;
-using HelloApp.MeteoHandler;
+﻿using HelloApp.MeteoHandler.Entities.Messages.Requests;
+using HelloApp.MeteoHandler.Entities.Messages.Responses;
 using RestSharp;
 using System.Text.Json;
 
@@ -12,13 +12,11 @@ public class MeteoService : IMeteoService
         _apiHandler = apiHandler;
     }
 
-    public async Task<Weather> GetDegreeseByDay(string location, string endpoint)
+    public async Task<WeatherResponse> GetDegreeseByDay(string location)
     {
-        var request = new Dictionary<string, string>
-        {
-            { "q", location }
-        };
+        var request = new LocationRequest();
+        request.Name = location;
 
-        return await _apiHandler.MeteoRequest(endpoint, Method.Get, request);
+        return await _apiHandler.GetWeather(request);
     }
 }

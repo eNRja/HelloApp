@@ -4,7 +4,7 @@
     {
         endpoints.MapGet("/api/weather", async (IMeteoService meteoService, string location = "Moscow") =>
         {
-            var weather = await meteoService.GetDegreeseByDay(location, "/current.json");
+            var weather = await meteoService.GetDegreeseByDay(location);
             return Results.Json(weather);
         });
     }
