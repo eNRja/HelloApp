@@ -1,6 +1,5 @@
-﻿using HelloApp.MeteoHandler.Entities.Messages.Responses;
-
+﻿using HelloApp.Services.Entities.Messages.Responses;
 public interface IMeteoService
 {
-    Task<WeatherResponse> GetDegreeseByDay(string location);
+    Task<MeteoResponse> GetDegreeseByDay(string location);
 }

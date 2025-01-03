@@ -36,6 +36,7 @@ public static class ApplicationServiceExtensions
 
         // Настройка AutoMapper
         builder.Services.AddAutoMapper(typeof(MappingProfile));
+        builder.Services.AddAutoMapper(typeof(MappingMeteoProfile));
 
         // Чтение конфигурации из файла appsettings.Secrets.json
         builder.Configuration.AddJsonFile("appsettings.Secrets.json", optional: true, reloadOnChange: true);
