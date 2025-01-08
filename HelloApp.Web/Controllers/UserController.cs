@@ -1,4 +1,5 @@
 ﻿using HelloApp.Services;
+using HelloApp.Services.Models;
 
 public static class UserController
 {

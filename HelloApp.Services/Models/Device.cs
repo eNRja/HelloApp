@@ -1,4 +1,4 @@
-﻿namespace HelloApp.Services
+﻿namespace HelloApp.Services.Models
 
 {
     public class Device

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HelloApp.Services.Models;
 
 namespace HelloApp.Services
 {
