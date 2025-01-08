@@ -1,4 +1,4 @@
-﻿using HelloApp.Services.Entities.Messages;
+﻿using HelloApp.Services.Models;
 
 public static class WeatherController
 {

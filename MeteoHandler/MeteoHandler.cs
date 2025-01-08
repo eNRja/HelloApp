@@ -1,6 +1,6 @@
-﻿using HelloApp.MeteoHandler;
-using HelloApp.MeteoHandler.Entities.Messages.Requests;
-using HelloApp.MeteoHandler.Entities.Messages.Responses;
+﻿using HelloApp.MeteoHandler.Messages.Models;
+using HelloApp.MeteoHandler.Messages.Requests;
+using HelloApp.MeteoHandler.Messages.Responses;
 using Microsoft.Extensions.Configuration;
 using RestSharp;
 using System;

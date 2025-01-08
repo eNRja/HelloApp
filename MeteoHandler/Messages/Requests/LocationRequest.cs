@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace HelloApp.MeteoHandler.Entities.Messages.Requests
+namespace HelloApp.MeteoHandler.Messages.Requests
 {
     public class LocationRequest
     {

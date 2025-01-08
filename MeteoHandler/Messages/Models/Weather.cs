@@ -1,7 +1,6 @@
-﻿using HelloApp.MeteoHandler.Entities.Messages;
-using HelloApp.MeteoHandler.Entities.Messages.Requests;
+﻿using HelloApp.MeteoHandler.Messages.Requests;
 
-namespace HelloApp.MeteoHandler
+namespace HelloApp.MeteoHandler.Messages.Models
 {
     public class Weather
     {

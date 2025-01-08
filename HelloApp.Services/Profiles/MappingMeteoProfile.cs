@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using HelloApp.MeteoHandler.Entities.Messages.Responses;
-using HelloApp.Services.Entities;
-using HelloApp.Services.Entities.Messages;
+using HelloApp.MeteoHandler.Messages.Responses;
+using HelloApp.Services.Models;
 
 public class MappingMeteoProfile : Profile
 {

@@ -1,6 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using HelloApp.MeteoHandler.Messages.Models;
+using System.Text.Json.Serialization;
 
-namespace HelloApp.MeteoHandler.Entities.Messages.Responses
+namespace HelloApp.MeteoHandler.Messages.Responses
 
 {
     public class WeatherResponse

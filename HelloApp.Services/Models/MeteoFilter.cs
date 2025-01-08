@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace HelloApp.Services.Entities.Messages
+namespace HelloApp.Services.Models
 {
 
     public class MeteoFilter

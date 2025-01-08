@@ -1,5 +1,5 @@
-﻿using HelloApp.MeteoHandler.Entities.Messages.Requests;
-using HelloApp.MeteoHandler.Entities.Messages.Responses;
+﻿using HelloApp.MeteoHandler.Messages.Requests;
+using HelloApp.MeteoHandler.Messages.Responses;
 using RestSharp;
 
 public interface IMeteoHandler

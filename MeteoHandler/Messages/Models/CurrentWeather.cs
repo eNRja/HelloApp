@@ -1,4 +1,4 @@
-﻿namespace HelloApp.MeteoHandler.Entities.Messages
+﻿namespace HelloApp.MeteoHandler.Messages.Models
 {
     public class CurrentWeather
     {
