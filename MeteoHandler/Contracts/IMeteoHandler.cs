@@ -4,5 +4,5 @@ using RestSharp;
 
 public interface IMeteoHandler
 {
-    Task<WeatherResponse> GetWeather(LocationRequest location);
+    Task<WeatherResponse> GetWeather(string location);
 }
