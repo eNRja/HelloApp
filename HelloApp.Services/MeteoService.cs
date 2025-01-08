@@ -16,15 +16,6 @@ public class MeteoService : IMeteoService
 
     public async Task<MeteoModel> GetDegreeseByDay(string location)
     {
-        // Создаем запрос бизнес-логики (MeteoLocationRequest)
-        //var businessRequest = new MeteoLocationRequest
-        //{
-        //    Location = location
-        //};
-
-        // Маппим бизнес-запрос в запрос для внешнего API
-        //var externalRequest = _mapper.Map<LocationRequest>(businessRequest);
-
         // Получаем ответ от внешнего API
         var weatherResponse = await _apiHandler.GetWeather(location);
 
