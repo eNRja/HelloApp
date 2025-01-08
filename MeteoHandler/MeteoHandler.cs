@@ -25,7 +25,7 @@ public class MeteoHandler : IMeteoHandler
                   ?? throw new Exception("API Key для WeatherApi не найден в конфигурации.");
     }
 
-    public async Task<WeatherResponse> GetWeather(string location)
+    public async Task<WeatherResponse> GetWeather(LocationRequest location)
     {
         const string endpoint = "/current.json";
         var fullEndpoint = _baseUrl + endpoint;
@@ -34,7 +34,7 @@ public class MeteoHandler : IMeteoHandler
 
         options.PropertyNameCaseInsensitive = true; // JSON поля могут быть с разным регистром
         apiRequest.Add("key", _apiKey);
-        apiRequest.Add("q", location);
+        apiRequest.Add("q", location.Location);
 
         var responseMeteo = await _externalApi.DataRequest(fullEndpoint, Method.Get, apiRequest);
         var serializedMeteo = JsonSerializer.Deserialize<Weather>(responseMeteo.RootElement.GetRawText(), options);

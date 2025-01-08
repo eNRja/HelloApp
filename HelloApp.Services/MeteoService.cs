@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using HelloApp.MeteoHandler.Entities.Messages.Requests;
-using HelloApp.Services.Entities.Messages.Requests;
-using HelloApp.Services.Entities.Messages.Responses;
+using HelloApp.MeteoHandler.Entities.Messages.Responses;
+using HelloApp.Services.Entities;
+using HelloApp.Services.Entities.Messages;
 
 public class MeteoService : IMeteoService
 {
@@ -14,14 +15,20 @@ public class MeteoService : IMeteoService
         _mapper = mapper;
     }
 
-    public async Task<MeteoModel> GetDegreeseByDay(string location)
+    public async Task<MeteoModel> GetDegreeseByDay(MeteoFilter filter)
     {
-        // Получаем ответ от внешнего API
-        var weatherResponse = await _apiHandler.GetWeather(location);
+        // Сформировать запрос для внешнего API
+        var externalRequest = new LocationRequest
+        {
+            Location = filter.Location
+        };
 
-        // Маппим ответ от внешнего API в бизнес-ответ
-        var meteoResponse = _mapper.Map<MeteoModel>(weatherResponse);
+        // Получить ответ от внешнего API
+        var weatherResponse = await _apiHandler.GetWeather(externalRequest);
 
-        return meteoResponse;
+        // Маппинг ответа API в бизнес-модель
+        var meteoModel = _mapper.Map<MeteoModel>(weatherResponse);
+
+        return meteoModel;
     }
 }

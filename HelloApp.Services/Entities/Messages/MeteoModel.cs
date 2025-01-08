@@ -1,4 +1,4 @@
-﻿namespace HelloApp.Services.Entities.Messages.Responses
+﻿namespace HelloApp.Services.Entities.Messages
 {
     public class MeteoModel
     {
