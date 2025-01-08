@@ -1,6 +1,6 @@
 ﻿using HelloApp.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using RestSharp;
 
 public static class ApplicationServiceExtensions
@@ -24,13 +24,13 @@ public static class ApplicationServiceExtensions
         {
             var configuration = provider.GetRequiredService<IConfiguration>();
             var baseUrl = configuration["ExternalApi:WeatherUrl"];
-            return new RestClient(baseUrl);
+            return new RestClient(baseUrl);  // Создаём RestClient с конфигурацией
         });
 
         // Регистрация ExternalApi
-        builder.Services.AddScoped<IExternalApi, ExternalApi>();
+        builder.Services.AddScoped<ExternalApi>(); // Регистрация через интерфейс
 
-        // Регистрация стратегий и фасада
+        // Регистрация MeteoHandler (он будет использовать ExternalApi через наследование)
         builder.Services.AddScoped<IMeteoHandler, MeteoHandler>();
         builder.Services.AddScoped<IMeteoService, MeteoService>();
 

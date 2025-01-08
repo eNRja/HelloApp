@@ -5,16 +5,18 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-public class ExternalApi : IExternalApi
+public class ExternalApi
 {
     private readonly RestClient _restClient;
+    private readonly IConfiguration _configuration;
 
     public ExternalApi(RestClient restClient, IConfiguration configuration)
     {
         _restClient = restClient;
+        _configuration = configuration;
     }
 
-    public async Task<JsonDocument> DataRequest(string endpoint, Method method, Dictionary<string, string> request)
+    protected async Task<JsonDocument> DataRequest(string endpoint, Method method, Dictionary<string, string> request)
     {
         var newRequest = new RestRequest(endpoint, method);
 
